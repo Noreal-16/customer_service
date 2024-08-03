@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CustomerDTO extends PersonDTO {
-    Long customerId;
     @NotBlank
     String password;
     Boolean status;
+    Long personId;
 }

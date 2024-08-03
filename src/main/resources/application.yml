@@ -1,3 +1,21 @@
 spring:
   application:
     name: client_person_service
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/banck
+    username: postgres
+    password: javacoffe343569
+
+  data:
+    r2dbc:
+      repositories:
+        enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+server:
+  port: 8081
+
