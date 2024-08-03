@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.client_person_service.client_person_service.application.dto.CustomerDTO;
 import org.client_person_service.client_person_service.application.dto.PersonDTO;
-import org.client_person_service.client_person_service.application.interfaces.CustomerService;
+import org.client_person_service.client_person_service.application.interfaces.RegisterCustomerService;
 import org.client_person_service.client_person_service.domain.CustomerEntity;
 import org.client_person_service.client_person_service.domain.PersonEntity;
 import org.client_person_service.client_person_service.infrastructure.repository.CustomerRepository;
@@ -21,7 +21,7 @@ import reactor.core.scheduler.Schedulers;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class RegisterCustomerImp implements CustomerService {
+public class RegisterCustomerImp implements RegisterCustomerService {
 
     private final CustomerRepository customerRepository;
     private final PersonRepository personRepository;
