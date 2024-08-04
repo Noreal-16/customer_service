@@ -3,10 +3,7 @@ package org.client_person_service.client_person_service.infrastructure.controlle
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.client_person_service.client_person_service.application.dto.CustomerDTO;
-import org.client_person_service.client_person_service.application.interfaces.GetAllCustomersService;
-import org.client_person_service.client_person_service.application.interfaces.GetInfoCustomerService;
-import org.client_person_service.client_person_service.application.interfaces.RegisterCustomerService;
-import org.client_person_service.client_person_service.application.interfaces.UpdateCustomerService;
+import org.client_person_service.client_person_service.application.interfaces.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +20,7 @@ public class CustomerController {
     private final GetAllCustomersService getAllCustomersService;
     private final GetInfoCustomerService getInfoCustomerService;
     private final UpdateCustomerService updateCustomerService;
+    private final DeleteCustomerService deleteCustomerService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -52,7 +50,7 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<Void> deleteCustomer(@PathVariable Long id) {
-        return registerCustomerService.delete(id);
+        return deleteCustomerService.deleteCustomer(id);
     }
 
 }
