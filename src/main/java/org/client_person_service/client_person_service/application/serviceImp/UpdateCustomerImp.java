@@ -30,30 +30,34 @@ public class UpdateCustomerImp implements UpdateCustomerService {
 
     @Override
     public Mono<ResponseDTO> updateCustomer(Long id, CustomerDTO data) {
-        return personRepository.findById(id)
-                .flatMap(existPerson -> {
-                    log.info("Exist person: {}", existPerson);
-                    updatePersonEntity(existPerson, data);
-                    return personRepository.save(existPerson)
-                            .flatMap(savedPerson -> {
-                                log.info("Saved person: {}", savedPerson.getId());
-                                return customerPersonRepository.findCustomerByPersonId(savedPerson.getId())
-                                        .flatMap(existCustomer -> {
-                                            log.info("Exist customer: {}", existCustomer);
-                                            existCustomer.setPassword(data.getPassword());
-                                            return udpCustomer(existCustomer.getId(), data)
-                                                    .then(Mono.just(mapperConvert.toDTO(existCustomer, CustomerDTO.class)));
-                                        })
-                                        .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro cliente con el id " + savedPerson.getId())));
-                            });
-                }).map(customer -> successUpdate()).as(transactionalOperator::transactional);
+        return findUpdatePerson(id, data)
+                .flatMap(savedPerson -> findUpdateCustomerByPersonId(savedPerson.getId(), data))
+                .then(Mono.just(successUpdate()))
+                .as(transactionalOperator::transactional);
+    }
+
+    private Mono<PersonEntity> findUpdatePerson(Long id, CustomerDTO data) {
+        return personRepository.findById(id).flatMap(personEntity -> {
+            log.info("Exist person: {}", personEntity);
+            updatePersonEntity(personEntity, data);
+            return personRepository.save(personEntity);
+        });
+    }
+
+    private Mono<CustomerDTO> findUpdateCustomerByPersonId(Long id, CustomerDTO data) {
+        return customerPersonRepository.findCustomerByPersonId(id)
+                .flatMap(customerEntity -> {
+                    log.info("Exist customer: {}", customerEntity);
+                    return updateCustomer(customerEntity.getId(), data)
+                            .then(Mono.just(mapperConvert.toDTO(customerEntity, CustomerDTO.class)));
+                }).switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro cliente con el id " + id)));
     }
 
     private ResponseDTO successUpdate() {
-        ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setMessage("Cliente actualizado exitosamente");
-        responseDTO.setStatus("OK");
-        return responseDTO;
+        return new ResponseDTO(
+                "OK",
+                "Cliente actualizado exitosamente"
+        );
     }
 
     private void updatePersonEntity(PersonEntity personEntity, CustomerDTO data) {

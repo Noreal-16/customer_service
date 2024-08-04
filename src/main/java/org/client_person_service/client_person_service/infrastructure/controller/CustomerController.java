@@ -50,7 +50,7 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> deleteCustomer(@PathVariable Long id) {
+    public Mono<ResponseDTO> deleteCustomer(@PathVariable Long id) {
         return deleteCustomerService.deleteCustomer(id);
     }
 
