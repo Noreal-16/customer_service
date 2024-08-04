@@ -3,6 +3,7 @@ package org.client_person_service.client_person_service.infrastructure.controlle
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.client_person_service.client_person_service.application.dto.CustomerDTO;
+import org.client_person_service.client_person_service.application.dto.ResponseDTO;
 import org.client_person_service.client_person_service.application.interfaces.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,14 +37,14 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<CustomerDTO> registerCustomer(@RequestBody CustomerDTO customerDTO) {
-        return registerCustomerService.save(customerDTO);
+    public Mono<ResponseDTO> registerCustomer(@RequestBody CustomerDTO customerDTO) {
+        return registerCustomerService.saveCustomer(customerDTO);
     }
 
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+    public Mono<ResponseDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
         return updateCustomerService.updateCustomer(id, customerDTO);
     }
 

@@ -3,6 +3,7 @@ package org.client_person_service.client_person_service.application.serviceImp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.client_person_service.client_person_service.application.dto.CustomerDTO;
+import org.client_person_service.client_person_service.application.dto.ResponseDTO;
 import org.client_person_service.client_person_service.application.interfaces.UpdateCustomerService;
 import org.client_person_service.client_person_service.domain.CustomerEntity;
 import org.client_person_service.client_person_service.domain.PersonEntity;
@@ -12,6 +13,7 @@ import org.client_person_service.client_person_service.infrastructure.repository
 import org.client_person_service.client_person_service.infrastructure.utils.MapperConvert;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
@@ -24,9 +26,10 @@ public class UpdateCustomerImp implements UpdateCustomerService {
     private final CustomerPersonRepository customerPersonRepository;
     private final CustomerRepository customerRepository;
     private final MapperConvert<CustomerDTO, CustomerEntity> mapperConvert;
+    private final TransactionalOperator transactionalOperator;
 
     @Override
-    public Mono<CustomerDTO> updateCustomer(Long id, CustomerDTO data) {
+    public Mono<ResponseDTO> updateCustomer(Long id, CustomerDTO data) {
         return personRepository.findById(id)
                 .flatMap(existPerson -> {
                     log.info("Exist person: {}", existPerson);
@@ -38,16 +41,20 @@ public class UpdateCustomerImp implements UpdateCustomerService {
                                         .flatMap(existCustomer -> {
                                             log.info("Exist customer: {}", existCustomer);
                                             existCustomer.setPassword(data.getPassword());
-                                            log.info("Exist password: {}", existCustomer.getPassword());
-                                            return customerRepository
-                                                    .updatePassword(existCustomer.getId(), data.getPassword())
+                                            return udpCustomer(existCustomer.getId(), data)
                                                     .then(Mono.just(mapperConvert.toDTO(existCustomer, CustomerDTO.class)));
                                         })
                                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro cliente con el id " + savedPerson.getId())));
                             });
-                });
+                }).map(customer -> successUpdate()).as(transactionalOperator::transactional);
     }
 
+    private ResponseDTO successUpdate() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setMessage("Cliente actualizado exitosamente");
+        responseDTO.setStatus("OK");
+        return responseDTO;
+    }
 
     private void updatePersonEntity(PersonEntity personEntity, CustomerDTO data) {
         personEntity.setName(data.getName());
@@ -57,7 +64,7 @@ public class UpdateCustomerImp implements UpdateCustomerService {
         personEntity.setPhone(data.getPhone());
     }
 
-    private void updateCustomer(CustomerEntity customerEntity, CustomerDTO data) {
-        customerEntity.setPassword(data.getPassword());
+    private Mono<Void> udpCustomer(Long id, CustomerDTO data) {
+        return customerRepository.updatePassword(id, data.getPassword());
     }
 }

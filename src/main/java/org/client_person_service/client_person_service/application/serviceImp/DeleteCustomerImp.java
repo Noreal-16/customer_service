@@ -8,6 +8,7 @@ import org.client_person_service.client_person_service.infrastructure.repository
 import org.client_person_service.client_person_service.infrastructure.repository.PersonRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
@@ -18,6 +19,7 @@ public class DeleteCustomerImp implements DeleteCustomerService {
     private final CustomerRepository customerRepository;
     private final PersonRepository personRepository;
     private final CustomerPersonRepository customerPersonRepository;
+    private final TransactionalOperator transactionalOperator;
 
     @Override
     public Mono<Void> deleteCustomer(long id) {
@@ -29,6 +31,7 @@ public class DeleteCustomerImp implements DeleteCustomerService {
                                                 .then(personRepository.delete(person))
                                 )
                 )
-                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró persona con el id " + id)));
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró persona con el id " + id)))
+                .as(transactionalOperator::transactional);
     }
 }
