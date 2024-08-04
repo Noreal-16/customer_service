@@ -6,6 +6,7 @@ import org.client_person_service.client_person_service.application.dto.CustomerD
 import org.client_person_service.client_person_service.application.interfaces.GetAllCustomersService;
 import org.client_person_service.client_person_service.application.interfaces.GetInfoCustomerService;
 import org.client_person_service.client_person_service.application.interfaces.RegisterCustomerService;
+import org.client_person_service.client_person_service.application.interfaces.UpdateCustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class CustomerController {
     private final RegisterCustomerService registerCustomerService;
     private final GetAllCustomersService getAllCustomersService;
     private final GetInfoCustomerService getInfoCustomerService;
+    private final UpdateCustomerService updateCustomerService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -44,7 +46,7 @@ public class CustomerController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<CustomerDTO> updateCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
-        return registerCustomerService.update(id, customerDTO);
+        return updateCustomerService.updateCustomer(id, customerDTO);
     }
 
     @DeleteMapping("/{id}")

@@ -16,4 +16,6 @@ public interface CustomerPersonRepository extends R2dbcRepository<CustomerEntity
     @Query("select c.*, p.* from public.customer c inner join public.person p on p.id = c.person_id where c.id =:id")
     Mono<CustomerEntity> findCustomerById(Long id);
 
+    @Query("select c.* from public.customer c where c.person_id =:id")
+    Mono<CustomerEntity> findCustomerByPersonId(Long id);
 }

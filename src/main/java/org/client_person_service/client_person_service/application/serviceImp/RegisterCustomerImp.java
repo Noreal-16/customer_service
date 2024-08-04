@@ -51,7 +51,8 @@ public class RegisterCustomerImp implements RegisterCustomerService {
                     log.info("La data de registrado es {}", personEntity);
                     return saveCustomer(data, personEntity.getId());
                 })
-                .map(customerEntity -> mapperConvert.toDTO(customerEntity, CustomerDTO.class));
+                .map(customerEntity -> mapperConvert.toDTO(customerEntity, CustomerDTO.class))
+                .as(transactionalOperator::transactional);
     }
 
     @Override
