@@ -6,10 +6,10 @@ import org.client_person_service.client_person_service.application.dto.CustomerD
 import org.client_person_service.client_person_service.application.interfaces.*;
 import org.client_person_service.client_person_service.infrastructure.exceptions.ErrorResponseCustomer;
 import org.client_person_service.client_person_service.infrastructure.exceptions.ResourceNotFoundException;
+import org.client_person_service.client_person_service.infrastructure.validation.ObjectValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-@Validated
 @RequiredArgsConstructor
 public class CustomerHandler {
 
@@ -26,6 +25,7 @@ public class CustomerHandler {
     private final RegisterCustomerService registerCustomerService;
     private final UpdateCustomerService updateCustomerService;
     private final DeleteCustomerService deleteCustomerService;
+    private final ObjectValidation objectValidation;
 
     public Mono<ServerResponse> getAllCustomers(ServerRequest serverRequest) {
         return getAllCustomersService.getAllCustomers()
@@ -44,20 +44,16 @@ public class CustomerHandler {
     }
 
     public Mono<ServerResponse> createCustomer(ServerRequest serverRequest) {
-        Mono<CustomerDTO> customerDTOMono = serverRequest.bodyToMono(CustomerDTO.class);
-        return customerDTOMono.flatMap(c -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(registerCustomerService.saveCustomer(c), CustomerDTO.class)
-                .onErrorResume(error -> ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .bodyValue(new ErrorResponseCustomer("INTERNAL_SERVER_ERROR", "Error occurred while fetching customers"))));
+        Mono<CustomerDTO> customerDTOMono = serverRequest.bodyToMono(CustomerDTO.class).doOnNext(objectValidation::validate);
+        return customerDTOMono.flatMap(c -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).body(registerCustomerService.saveCustomer(c), CustomerDTO.class));
     }
 
     public Mono<ServerResponse> updateCustomer(ServerRequest serverRequest) {
         Long id = Long.parseLong(serverRequest.pathVariable("id"));
-        Mono<CustomerDTO> customerDTOMono = serverRequest.bodyToMono(CustomerDTO.class);
+        Mono<CustomerDTO> customerDTOMono = serverRequest.bodyToMono(CustomerDTO.class).doOnNext(objectValidation::validate);
         return customerDTOMono.flatMap(cu -> ServerResponse.ok()
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(updateCustomerService.updateCustomer(id, cu), CustomerDTO.class))
-                .onErrorResume(error -> ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .bodyValue(new ErrorResponseCustomer("INTERNAL_SERVER_ERROR", "Error occurred while fetching customers")));
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(updateCustomerService.updateCustomer(id, cu), CustomerDTO.class));
     }
 
     public Mono<ServerResponse> deleteCustomer(ServerRequest serverRequest) {
@@ -67,5 +63,6 @@ public class CustomerHandler {
                 .onErrorResume(error -> ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .bodyValue(new ErrorResponseCustomer("INTERNAL_SERVER_ERROR", "Error occurred while fetching customers")));
     }
+
 
 }

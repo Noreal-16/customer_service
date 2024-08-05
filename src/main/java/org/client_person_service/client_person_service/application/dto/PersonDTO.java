@@ -12,7 +12,7 @@ public class PersonDTO {
     String name;
     @NotBlank
     String gender;
-    @NotBlank
+    @NotNull
     Integer age;
     @NotBlank
     String identification;
