@@ -3,7 +3,7 @@ create table if not exists person (
                         name    varchar(50) not null ,
                         gender  varchar(10) not null,
                         age     int not null ,
-                        identification varchar(13) not null,
+                        identification varchar(13) unique not null,
                         direction varchar(50) not null,
                         phone varchar(10) not null
 );
