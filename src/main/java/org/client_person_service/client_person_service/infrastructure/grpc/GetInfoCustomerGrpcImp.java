@@ -69,5 +69,4 @@ public class GetInfoCustomerGrpcImp extends CustomerServiceGrpc.CustomerServiceI
                 .doOnTerminate(responseObserver::onCompleted)
                 .subscribe();
     }
-
 }

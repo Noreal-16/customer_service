@@ -6,7 +6,7 @@ import org.client_person_service.client_person_service.application.dto.CustomerD
 import org.client_person_service.client_person_service.application.interfaces.*;
 import org.client_person_service.client_person_service.infrastructure.exceptions.ErrorResponseCustomer;
 import org.client_person_service.client_person_service.infrastructure.exceptions.ResourceNotFoundException;
-import org.client_person_service.client_person_service.infrastructure.validation.ObjectValidation;
+import org.client_person_service.client_person_service.infrastructure.utils.validation.ObjectValidation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;

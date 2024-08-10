@@ -1,4 +1,4 @@
-package org.client_person_service.client_person_service.infrastructure.validation;
+package org.client_person_service.client_person_service.infrastructure.utils.validation;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -25,7 +25,7 @@ public class ObjectValidation {
         if (constraintViolations.isEmpty()) return object;
         else {
             String message = constraintViolations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining(", "));
-            throw new CustomException(HttpStatus.BAD_REQUEST, message);
+            throw new CustomException(message, HttpStatus.BAD_REQUEST);
         }
     }
 

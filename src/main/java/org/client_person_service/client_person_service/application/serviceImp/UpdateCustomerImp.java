@@ -68,7 +68,4 @@ public class UpdateCustomerImp implements UpdateCustomerService {
         personEntity.setPhone(data.getPhone());
     }
 
-    private Mono<Void> udpCustomer(Long id, CustomerDTO data) {
-        return customerRepository.updatePassword(id, data.getPassword());
-    }
 }

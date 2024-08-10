@@ -10,14 +10,18 @@ public class PersonDTO {
     @NotNull(message = "Name cannot be null")
     @NotBlank(message = "Name cannot be empty")
     String name;
-    @NotBlank
+    @NotNull(message = "Gender cannot be null")
+    @NotBlank(message = "Gender cannot be empty")
     String gender;
-    @NotNull
+    @NotNull(message = "Age cannot be null")
     Integer age;
-    @NotBlank
+    @NotNull(message = "Identification cannot be null")
+    @NotBlank(message = "Identification cannot be empty")
     String identification;
-    @NotBlank
+    @NotNull(message = "Direction cannot be null")
+    @NotBlank(message = "Direction cannot be empty")
     String direction;
-    @NotBlank
+    @NotNull(message = "Phone cannot be null")
+    @NotBlank(message = "Phone cannot be empty")
     String phone;
 }
