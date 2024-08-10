@@ -1,0 +1,6 @@
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY build/libs/microservice-1.jar client_person_service.jar
+EXPOSE 8081
+EXPOSE 9090
+ENTRYPOINT ["java", "-jar", "client_person_service.jar"]

@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
                         name = "WebFlux Spring Boot"
                 ),
                 license = @License(
-                        name = "OpenApi YML", url = "http://localhost:8080/v3/api-docs.yaml"
+                        name = "OpenApi YML", url = "http://localhost:8081/v3/api-docs.yaml"
                 ),
                 description = "Chapter"
         ),

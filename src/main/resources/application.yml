@@ -27,3 +27,7 @@ springdoc:
     path: /v1/api-docs
     groups:
       enabled: true
+
+grpc:
+  server:
+    port: 9090

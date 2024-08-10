@@ -119,7 +119,7 @@ import java.lang.annotation.Target;
 
         @RouterOperation(
                 method = RequestMethod.DELETE,
-                path = "/api/v1//customers/{id}",
+                path = "/api/v1/customers/{id}",
                 operation =
                 @Operation(
                         description = "Eliminar un cliente por su ID.",
