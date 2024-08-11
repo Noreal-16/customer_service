@@ -2,9 +2,9 @@ spring:
   application:
     name: client_person_service
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/banck
+    url: r2dbc:postgresql://192.168.0.105:5433/testdb
     username: postgres
-    password: javacoffe343569
+    password: postgres
 
   data:
     r2dbc:
@@ -17,7 +17,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
 server:
-  port: 8081
+  port: 7070
 
 springdoc:
   swagger-ui:
@@ -30,4 +30,4 @@ springdoc:
 
 grpc:
   server:
-    port: 9090
+    port: 9030
