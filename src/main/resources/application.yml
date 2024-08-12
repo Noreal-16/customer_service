@@ -2,10 +2,10 @@ spring:
   application:
     name: client_person_service
   r2dbc:
-    url: r2dbc:postgresql://192.168.0.105:5433/testdb
+    url: r2dbc:postgresql://dbPostgres:5433/testdb
     username: postgres
     password: postgres
-
+  # Cambiar a IP de contenedor para BD
   data:
     r2dbc:
       repositories:
