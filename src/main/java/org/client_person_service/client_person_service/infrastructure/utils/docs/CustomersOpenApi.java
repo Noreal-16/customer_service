@@ -1,4 +1,4 @@
-package org.client_person_service.client_person_service.infrastructure.router.docs;
+package org.client_person_service.client_person_service.infrastructure.utils.docs;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
