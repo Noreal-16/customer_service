@@ -28,7 +28,7 @@ public class CustomWebExceptionHandler implements WebExceptionHandler {
             message = customException.getMessage();
         } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
-            message = "An unexpected error occurred.";
+            message = "An unexpected error occurred." + ex.getMessage();
         }
 
         ErrorResponseCustomer errorResponse = new ErrorResponseCustomer(status.name(), message);

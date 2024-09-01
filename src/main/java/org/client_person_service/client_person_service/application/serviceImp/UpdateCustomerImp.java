@@ -39,8 +39,7 @@ public class UpdateCustomerImp implements UpdateCustomerService {
     private Mono<PersonEntity> findUpdatePerson(Long id, CustomerDTO data) {
         return personRepository.findById(id).flatMap(personEntity -> {
             log.info("Exist person: {}", personEntity);
-            updatePersonEntity(personEntity, data);
-            return personRepository.save(personEntity);
+            return updatePersonEntity(personEntity, data);
         });
     }
 
@@ -48,9 +47,13 @@ public class UpdateCustomerImp implements UpdateCustomerService {
         return customerPersonRepository.findCustomerByPersonId(id)
                 .flatMap(customerEntity -> {
                     log.info("Exist customer: {}", customerEntity);
-                    return updateCustomer(customerEntity.getId(), data)
+                    return updateCustomerByPersonId(customerEntity.getId(), data.getPassword())
                             .then(Mono.just(mapperConvert.toDTO(customerEntity, CustomerDTO.class)));
                 }).switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontro cliente con el id " + id)));
+    }
+
+    private Mono<Void> updateCustomerByPersonId(Long id, String data) {
+        return customerRepository.updatePassword(id, data);
     }
 
     private ResponseDTO successUpdate() {
@@ -60,12 +63,13 @@ public class UpdateCustomerImp implements UpdateCustomerService {
         );
     }
 
-    private void updatePersonEntity(PersonEntity personEntity, CustomerDTO data) {
+    private Mono<PersonEntity> updatePersonEntity(PersonEntity personEntity, CustomerDTO data) {
         personEntity.setName(data.getName());
         personEntity.setGender(data.getGender());
         personEntity.setAge(data.getAge());
         personEntity.setDirection(data.getDirection());
         personEntity.setPhone(data.getPhone());
+        return personRepository.save(personEntity);
     }
 
 }

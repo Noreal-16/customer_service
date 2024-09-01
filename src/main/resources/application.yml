@@ -2,14 +2,10 @@ spring:
   application:
     name: client_person_service
   r2dbc:
-    url: r2dbc:h2:mem:///testdb
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
+    url: r2dbc:postgresql://dbPostgres:5433/testdb
+    username: postgres
+    password: postgres
+  # Cambiar a IP de contenedor para BD
   data:
     r2dbc:
       repositories:
@@ -20,9 +16,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-
 server:
-  port: 8081
+  port: 7070
 
 springdoc:
   swagger-ui:
@@ -35,4 +30,4 @@ springdoc:
 
 grpc:
   server:
-    port: 9090
+    port: 9030
