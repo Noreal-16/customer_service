@@ -8,10 +8,10 @@ import org.client_person_service.client_person_service.application.interfaces.Cu
 import org.client_person_service.client_person_service.domain.CustomerEntity;
 import org.client_person_service.client_person_service.domain.PersonEntity;
 import org.client_person_service.client_person_service.infrastructure.exceptions.CustomException;
-import org.client_person_service.client_person_service.infrastructure.utils.CustomerResponseMessage;
 import org.client_person_service.client_person_service.infrastructure.repository.CustomerPersonRepository;
 import org.client_person_service.client_person_service.infrastructure.repository.CustomerRepository;
 import org.client_person_service.client_person_service.infrastructure.repository.PersonRepository;
+import org.client_person_service.client_person_service.infrastructure.utils.CustomerResponseMessage;
 import org.client_person_service.client_person_service.infrastructure.utils.MapperConvert;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,11 +34,20 @@ public class CustomerImp implements CustomerService {
 
     @Override
     public Flux<CustomerDTO> getAll() {
-        return customerPersonRepository.findAllCustomers().map(customerEntity -> customerMapper.toDTO(customerEntity, CustomerDTO.class));
+        return customerPersonRepository
+                .findAllCustomers()
+                .map(customerEntity -> customerMapper.toDTO(customerEntity, CustomerDTO.class));
     }
 
     @Override
-    public Mono<CustomerDTO> getInfoById(String identification) {
+    public Mono<CustomerDTO> getById(Long id) {
+        return customerPersonRepository.findCustomerById(id)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Persona no encontrada")))
+                .map(customerEntity -> customerMapper.toDTO(customerEntity, CustomerDTO.class));
+    }
+
+    @Override
+    public Mono<CustomerDTO> getInfoByIdentification(String identification) {
         return customerPersonRepository.findCustomerByIdentification(identification)
                 .switchIfEmpty(Mono.error(new CustomException("No se encontró cliente registrado con la cedula ingresada: " + identification, HttpStatus.NOT_FOUND)))
                 .map(existCustomer -> customerMapper.toDTO(existCustomer, CustomerDTO.class));

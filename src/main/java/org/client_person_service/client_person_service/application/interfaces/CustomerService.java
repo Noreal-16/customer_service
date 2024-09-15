@@ -8,7 +8,9 @@ import reactor.core.publisher.Mono;
 public interface CustomerService {
     Flux<CustomerDTO> getAll();
 
-    Mono<CustomerDTO> getInfoById(String identification);
+    Mono<CustomerDTO> getById(Long id);
+
+    Mono<CustomerDTO> getInfoByIdentification(String identification);
 
     Mono<ResponseDTO> register(CustomerDTO data);
 

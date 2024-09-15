@@ -31,7 +31,13 @@ public class CustomerController {
     @GetMapping("/{identification}")
     @ResponseStatus(HttpStatus.OK)
     public Mono<CustomerDTO> getInfoCustomer(@PathVariable String identification) {
-        return customerService.getInfoById(identification);
+        return customerService.getInfoByIdentification(identification);
+    }
+
+    @GetMapping("/info-customer/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<CustomerDTO> getInfoCustomerById(@PathVariable Long id) {
+        return customerService.getById(id);
     }
 
     @PostMapping
